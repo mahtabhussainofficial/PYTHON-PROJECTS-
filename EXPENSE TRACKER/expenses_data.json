@@ -1,0 +1,18 @@
+{
+    "transactions": [
+        {
+            "type": "Income",
+            "amount": 20000.0,
+            "category": "Salary",
+            "description": "I RECIEVED 20K FROM ZEESHAN ASIF AS MY SALARY.",
+            "date": "2026-09-13 01:40:24"
+        },
+        {
+            "type": "Expense",
+            "amount": 10000.0,
+            "category": "University Fee",
+            "description": "I PAY 10K MY UNIVERSITY FEE ",
+            "date": "2026-09-13 01:41:17"
+        }
+    ]
+}
