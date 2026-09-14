@@ -1,18 +1,25 @@
 {
     "transactions": [
         {
+            "id": "b0ff9c41-8e22-41ad-9a3e-b4eb65732789",
             "type": "Income",
-            "amount": 20000.0,
-            "category": "Salary",
-            "description": "I RECIEVED 20K FROM ZEESHAN ASIF AS MY SALARY.",
-            "date": "2026-09-13 01:40:24"
+            "amount": 15000.0,
+            "category": "salary",
+            "date": "15 Sep 2026, 01:12 AM"
         },
         {
+            "id": "0b1846c6-6d0c-44a0-a338-1ccf4156f980",
             "type": "Expense",
-            "amount": 10000.0,
-            "category": "University Fee",
-            "description": "I PAY 10K MY UNIVERSITY FEE ",
-            "date": "2026-09-13 01:41:17"
+            "amount": 3000.0,
+            "category": "bhola store",
+            "date": "15 Sep 2026, 01:13 AM"
+        },
+        {
+            "id": "ba476689-7321-41c3-81d8-b4333786d985",
+            "type": "Expense",
+            "amount": 200.0,
+            "category": "package",
+            "date": "15 Sep 2026, 01:13 AM"
         }
     ]
 }

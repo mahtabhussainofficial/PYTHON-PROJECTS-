@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Expense Tracker</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .main-container { max-width: 600px; margin: 0 auto; }
+        
+        .dashboard { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; flex: 1; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card h3 { margin: 0; font-size: 14px; color: #777; font-weight: normal; }
+        .card h2 { margin: 10px 0 0 0; font-size: 24px; }
+        .balance-card { background: #2c3e50; color: white; }
+        .balance-card h3 { color: #cbd5e1; }
+        
+        .form-section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .form-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; outline: none; font-size: 15px; }
+        input:focus, select:focus { border-color: #3498db; }
+        button { background-color: #3498db; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        
+        /* Search Bar & Title Row */
+        .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .search-form { display: flex; gap: 5px; }
+        .search-form input { padding: 8px; width: 180px; font-size: 14px; }
+        .search-btn { width: auto; padding: 8px 15px; font-size: 14px; }
+        .clear-btn { background: #95a5a6; padding: 8px 15px; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; display: flex; align-items: center; }
+
+        .transaction-list { list-style: none; padding: 0; margin: 0; }
+        .transaction-item { background: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.03); border-left: 5px solid; }
+        .item-info h4 { margin: 0 0 5px 0; font-size: 16px; }
+        .item-info small { color: #888; font-size: 12px; }
+        .income-item { border-left-color: #2ecc71; }
+        .expense-item { border-left-color: #e74c3c; }
+        .amount-green { color: #2ecc71; font-weight: bold; font-size: 18px; }
+        .amount-red { color: #e74c3c; font-weight: bold; font-size: 18px; }
+        
+        /* Delete Button */
+        .delete-btn { color: #e74c3c; text-decoration: none; font-size: 18px; margin-left: 15px; transition: 0.2s; }
+        .delete-btn:hover { color: #c0392b; transform: scale(1.2); }
+        .right-side { display: flex; align-items: center; }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        
+        <div class="dashboard">
+            <div class="card balance-card">
+                <h3>Total Balance</h3>
+                <h2>Rs. {{ balance }}</h2>
+            </div>
+            <div class="card">
+                <h3>Income</h3>
+                <h2 style="color: #2ecc71;">Rs. {{ income }}</h2>
+            </div>
+            <div class="card">
+                <h3>Expenses</h3>
+                <h2 style="color: #e74c3c;">Rs. {{ expense }}</h2>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <form action="/add" method="POST">
+                <div class="form-row">
+                    <select name="type" required>
+                        <option value="Expense">Expense</option>
+                        <option value="Income">Income</option>
+                    </select>
+                    <input type="number" name="amount" placeholder="Amount" required min="1">
+                </div>
+                <div class="form-row">
+                    <input type="text" name="category" placeholder="Category (e.g. Food, Salary)" required>
+                </div>
+                <button type="submit">+ Add Transaction</button>
+            </form>
+        </div>
+
+        <!-- 🆕 Search & Title Section -->
+        <div class="list-header">
+            <h3 style="color: #555; margin: 0;">Transactions History</h3>
+            <form class="search-form" action="/" method="GET">
+                <input type="text" name="search_query" value="{{ search_query }}" placeholder="Search category...">
+                <button type="submit" class="search-btn">Search</button>
+                {% if search_query %}
+                    <a href="/" class="clear-btn">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+
+        <ul class="transaction-list">
+            <!-- Agar search karne par koi result na mile -->
+            {% if not transactions %}
+                <p style="text-align: center; color: #888;">No transactions found.</p>
+            {% endif %}
+
+            {% for t in transactions %}
+                <li class="transaction-item {% if t.type == 'Income' %} income-item {% else %} expense-item {% endif %}">
+                    <div class="item-info">
+                        <h4>{{ t.category }}</h4>
+                        <small>{{ t.date }}</small>
+                    </div>
+                    <div class="right-side">
+                        <div class="{% if t.type == 'Income' %} amount-green {% else %} amount-red {% endif %}">
+                            {% if t.type == 'Income' %}+{% else %}-{% endif %} Rs. {{ t.amount }}
+                        </div>
+                        <!-- 🆕 Delete Button -->
+                        {% if t.id %}
+                            <a href="/delete/{{ t.id }}" class="delete-btn" title="Delete this record">🗑️</a>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</body>
+</html>
