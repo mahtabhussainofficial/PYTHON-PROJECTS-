@@ -3,7 +3,7 @@ import shutil
 import logging
 from pathlib import Path
 
-# --- Activity Logging Setup ---
+# ActC:\Users\NEO\MESSYivity Logging Setup 
 # Ye program ke har action ko ek .log file mein save karega
 logging.basicConfig(
     filename='organizer_activity.log',
@@ -12,7 +12,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-# --- File Type Categories ---
+# File Type Categories 
 CATEGORY_MAP = {
     "Images": ['.jpg', '.jpeg', '.png', '.gif', '.svg'],
     "Documents": ['.pdf', '.docx', '.doc', '.txt', '.xlsx', '.csv', '.pptx'],
@@ -33,10 +33,10 @@ def organize_files(target_dir):
     folder_path = Path(target_dir)
     
     if not folder_path.exists() or not folder_path.is_dir():
-        print("❌ Invalid directory path! Please check the path and try again.")
+        print("Invalid directory path! Please check the path and try again.")
         return
 
-    print(f"📂 Scanning directory: {folder_path}...")
+    print(f"Scanning directory: {folder_path}...")
     moved_count = 0
 
     # Folder ke andar mojood har file ko check karna
@@ -76,11 +76,11 @@ def organize_files(target_dir):
         except Exception as e:
             logging.error(f"Error moving {file_path.name}: {e}")
 
-    print(f"✅ Organization complete! Successfully moved {moved_count} files.")
-    print("📝 Check 'organizer_activity.log' for a detailed history of changes.")
+    print(f" Organization complete! Successfully moved {moved_count} files.")
+    print(" Check 'organizer_activity.log' for a detailed history of changes.")
 
 if __name__ == "__main__":
-    print("=== 🛠️ Smart File Organizer ===")
+    print(" Smart File Organizer")
     print("Example path: C:\\Users\\YourName\\Downloads  OR  /Users/YourName/Downloads")
     target_directory = input("Enter the path of the messy folder you want to organize: ")
     organize_files(target_directory)
