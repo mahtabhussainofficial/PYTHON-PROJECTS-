@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro Expense Tracker</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
         .main-container { max-width: 600px; margin: 0 auto; }
         
+        /* Navbar */
+        .navbar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .navbar h3 { margin: 0; color: #2c3e50; }
+        .logout-btn { color: #e74c3c; text-decoration: none; font-weight: bold; }
+
         .dashboard { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; }
         .card { background: white; padding: 20px; border-radius: 12px; flex: 1; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card h3 { margin: 0; font-size: 14px; color: #777; font-weight: normal; }
@@ -19,28 +23,20 @@
         .form-section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 30px; }
         .form-row { display: flex; gap: 10px; margin-bottom: 15px; }
         input, select { padding: 12px; border: 1px solid #ddd; border-radius: 6px; width: 100%; outline: none; font-size: 15px; }
-        input:focus, select:focus { border-color: #3498db; }
         button { background-color: #3498db; color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
         
-        /* Search Bar & Title Row */
         .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .search-form { display: flex; gap: 5px; }
-        .search-form input { padding: 8px; width: 180px; font-size: 14px; }
-        .search-btn { width: auto; padding: 8px 15px; font-size: 14px; }
-        .clear-btn { background: #95a5a6; padding: 8px 15px; color: white; text-decoration: none; border-radius: 6px; font-size: 14px; display: flex; align-items: center; }
+        .reset-btn { background: #e74c3c; color: white; padding: 8px 15px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: bold; }
 
         .transaction-list { list-style: none; padding: 0; margin: 0; }
-        .transaction-item { background: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.03); border-left: 5px solid; }
+        .transaction-item { background: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid; }
         .item-info h4 { margin: 0 0 5px 0; font-size: 16px; }
         .item-info small { color: #888; font-size: 12px; }
         .income-item { border-left-color: #2ecc71; }
         .expense-item { border-left-color: #e74c3c; }
         .amount-green { color: #2ecc71; font-weight: bold; font-size: 18px; }
         .amount-red { color: #e74c3c; font-weight: bold; font-size: 18px; }
-        
-        /* Delete Button */
-        .delete-btn { color: #e74c3c; text-decoration: none; font-size: 18px; margin-left: 15px; transition: 0.2s; }
-        .delete-btn:hover { color: #c0392b; transform: scale(1.2); }
+        .delete-btn { color: #e74c3c; text-decoration: none; font-size: 18px; margin-left: 15px; }
         .right-side { display: flex; align-items: center; }
     </style>
 </head>
@@ -48,6 +44,12 @@
 
     <div class="main-container">
         
+        <!-- Navbar -->
+        <div class="navbar">
+            <h3>👤 Hello, {{ user_name }}!</h3>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+
         <div class="dashboard">
             <div class="card balance-card">
                 <h3>Total Balance</h3>
@@ -79,38 +81,28 @@
             </form>
         </div>
 
-        <!-- 🆕 Search & Title Section -->
         <div class="list-header">
-            <h3 style="color: #555; margin: 0;">Transactions History</h3>
-            <form class="search-form" action="/" method="GET">
-                <input type="text" name="search_query" value="{{ search_query }}" placeholder="Search category...">
-                <button type="submit" class="search-btn">Search</button>
-                {% if search_query %}
-                    <a href="/" class="clear-btn">Clear</a>
-                {% endif %}
-            </form>
+            <h3 style="color: #555; margin: 0;">History</h3>
+            <!-- 🆕 Reset Button -->
+            <a href="/reset" class="reset-btn" onclick="return confirm('Are you sure you want to delete all data?');">⚠️ Reset All Data</a>
         </div>
 
         <ul class="transaction-list">
-            <!-- Agar search karne par koi result na mile -->
             {% if not transactions %}
                 <p style="text-align: center; color: #888;">No transactions found.</p>
             {% endif %}
 
             {% for t in transactions %}
-                <li class="transaction-item {% if t.type == 'Income' %} income-item {% else %} expense-item {% endif %}">
+                <li class="transaction-item {% if t.trans_type == 'Income' %} income-item {% else %} expense-item {% endif %}">
                     <div class="item-info">
                         <h4>{{ t.category }}</h4>
                         <small>{{ t.date }}</small>
                     </div>
                     <div class="right-side">
-                        <div class="{% if t.type == 'Income' %} amount-green {% else %} amount-red {% endif %}">
-                            {% if t.type == 'Income' %}+{% else %}-{% endif %} Rs. {{ t.amount }}
+                        <div class="{% if t.trans_type == 'Income' %} amount-green {% else %} amount-red {% endif %}">
+                            {% if t.trans_type == 'Income' %}+{% else %}-{% endif %} Rs. {{ t.amount }}
                         </div>
-                        <!-- 🆕 Delete Button -->
-                        {% if t.id %}
-                            <a href="/delete/{{ t.id }}" class="delete-btn" title="Delete this record">🗑️</a>
-                        {% endif %}
+                        <a href="/delete/{{ t.id }}" class="delete-btn" title="Delete this record">🗑️</a>
                     </div>
                 </li>
             {% endfor %}
