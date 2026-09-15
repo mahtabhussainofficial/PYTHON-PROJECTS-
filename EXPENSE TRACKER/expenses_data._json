@@ -1,0 +1,25 @@
+{
+    "transactions": [
+        {
+            "type": "Income",
+            "amount": 16000.0,
+            "category": "Other",
+            "description": "1000",
+            "date": "2026-09-14 17:13:59"
+        },
+        {
+            "type": "Expense",
+            "amount": 1000.0,
+            "category": "Other",
+            "description": "ami ne soda mungwaya tha ",
+            "date": "2026-09-14 17:14:44"
+        },
+        {
+            "type": "Income",
+            "amount": 100.0,
+            "category": "Gift",
+            "description": "bohot achi behen ha mujha 100 rupay inam diya ha ",
+            "date": "2026-09-14 17:16:00"
+        }
+    ]
+}

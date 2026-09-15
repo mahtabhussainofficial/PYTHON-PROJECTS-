@@ -20,11 +20,16 @@
             {% endif %}
         {% endwith %}
 
-        <form method="POST">
-            <input type="text" name="name" placeholder="Full Name" required>
+       <form method="POST">
+            <!-- NAYA: Company Name Input -->
+            <input type="text" name="company_name" placeholder="Company / Business Name" required>
+            
+            <!-- Purane Inputs -->
+            <input type="text" name="name" placeholder="Your Full Name" required>
             <input type="email" name="email" placeholder="Email Address" required>
             <input type="password" name="password" placeholder="Create Password" required>
-            <button type="submit">Register</button>
+            
+            <button type="submit" style="background: #2c3e50;">Register Business</button>
         </form>
         <p>Already have an account? <a href="/login">Login here</a></p>
     </div>

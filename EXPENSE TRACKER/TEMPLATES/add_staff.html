@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Staff - ExpensePro</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding-top: 100px; }
+        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 320px; text-align: center; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; }
+        button { width: 100%; padding: 12px; background: #2ecc71; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .cancel-btn { display: block; margin-top: 15px; color: #777; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 style="color: #2c3e50; margin-bottom: 5px;">👥 Add New Staff</h2>
+        <p style="color: #777; font-size: 14px; margin-bottom: 20px;">They will join your company account.</p>
+        
+        <form method="POST">
+            <input type="text" name="name" placeholder="Staff Name" required>
+            <input type="email" name="email" placeholder="Staff Email" required>
+            <input type="password" name="password" placeholder="Temporary Password" required>
+            <button type="submit">Create Staff Account</button>
+        </form>
+        <a href="/" class="cancel-btn">Cancel & Go Back</a>
+    </div>
+</body>
+</html>

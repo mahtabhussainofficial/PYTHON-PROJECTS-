@@ -2,17 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pro Expense Tracker</title>
+    <title>ExpensePro | Business Dashboard</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
         .main-container { max-width: 600px; margin: 0 auto; }
         
-        /* Navbar */
         .navbar { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .navbar h3 { margin: 0; color: #2c3e50; }
+        .navbar h3 { margin: 0; color: #2c3e50; display: flex; align-items: center; gap: 10px; }
+        
+        /* Naye Badges (Admin aur Staff ke liye) */
+        .badge-admin { background: #e74c3c; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
+        .badge-staff { background: #3498db; color: white; padding: 3px 8px; border-radius: 12px; font-size: 12px; }
         .logout-btn { color: #e74c3c; text-decoration: none; font-weight: bold; }
-
+        
         .dashboard { display: flex; justify-content: space-between; gap: 15px; margin-bottom: 20px; }
         .card { background: white; padding: 20px; border-radius: 12px; flex: 1; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card h3 { margin: 0; font-size: 14px; color: #777; font-weight: normal; }
@@ -27,6 +30,7 @@
         
         .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .reset-btn { background: #e74c3c; color: white; padding: 8px 15px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: bold; }
+        .add-staff-btn { background: #2ecc71; color: white; padding: 8px 15px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: bold; margin-right: 10px; }
 
         .transaction-list { list-style: none; padding: 0; margin: 0; }
         .transaction-item { background: white; padding: 15px 20px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid; }
@@ -46,13 +50,22 @@
         
         <!-- Navbar -->
         <div class="navbar">
-            <h3>👤 Hello, {{ user_name }}!</h3>
-            <a href="/logout" class="logout-btn">Logout</a>
+            <h3>👤 Hello, {{ user_name }}! 
+                <!-- JINJA2 MAGIC: Role ke hisaab se Badge lagana -->
+                {% if session.get('role') == 'admin' %}
+                    <span class="badge-admin">Admin</span>
+                {% else %}
+                    <span class="badge-staff">Staff</span>
+                {% endif %}
+            </h3>
+            <div>
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
         </div>
 
         <div class="dashboard">
             <div class="card balance-card">
-                <h3>Total Balance</h3>
+                <h3>Company Balance</h3>
                 <h2>Rs. {{ balance }}</h2>
             </div>
             <div class="card">
@@ -82,9 +95,14 @@
         </div>
 
         <div class="list-header">
-            <h3 style="color: #555; margin: 0;">History</h3>
-            <!-- 🆕 Reset Button -->
-            <a href="/reset" class="reset-btn" onclick="return confirm('Are you sure you want to delete all data?');">⚠️ Reset All Data</a>
+            <h3 style="color: #555; margin: 0;">Company History</h3>
+            <div>
+                <!-- JINJA2 MAGIC: Sirf Admin ko Staff add karne aur Reset karne ki ijazat hai -->
+                {% if session.get('role') == 'admin' %}
+                    <a href="/add_staff" class="add-staff-btn">➕ Add Staff</a> 
+                    <a href="/reset" class="reset-btn" onclick="return confirm('Are you sure you want to delete all company data?');">⚠️ Reset All</a>
+                {% endif %}
+            </div>
         </div>
 
         <ul class="transaction-list">
@@ -102,7 +120,11 @@
                         <div class="{% if t.trans_type == 'Income' %} amount-green {% else %} amount-red {% endif %}">
                             {% if t.trans_type == 'Income' %}+{% else %}-{% endif %} Rs. {{ t.amount }}
                         </div>
-                        <a href="/delete/{{ t.id }}" class="delete-btn" title="Delete this record">🗑️</a>
+                        
+                        <!-- JINJA2 MAGIC: Staff sirf apne kharchay delete kar sakta hai, Admin sab ke kar sakta hai -->
+                        {% if session.get('role') == 'admin' or t.user_id == session.get('user_id') %}
+                            <a href="/delete/{{ t.id }}" class="delete-btn" title="Delete this record">🗑️</a>
+                        {% endif %}
                     </div>
                 </li>
             {% endfor %}
